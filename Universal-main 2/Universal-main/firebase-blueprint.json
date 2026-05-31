@@ -1,0 +1,249 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "Core user identity and progress data",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "fullName": { "type": "string" },
+        "callsign": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "bannerURL": { "type": "string" },
+        "courseGroup": { "type": "string" },
+        "role": { "type": "string", "enum": ["USER", "ADMIN", "MODERATOR", "CURATOR", "MENTOR"] },
+        "bio": { "type": "string" },
+        "socialLinks": {
+          "type": "object",
+          "properties": {
+            "email": { "type": "string" },
+            "telegram": { "type": "string" },
+            "github": { "type": "string" }
+          }
+        },
+        "achievements": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "learningPaths": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "progress": { "type": "number" }
+            }
+          }
+        },
+        "stats": {
+          "type": "object",
+          "properties": {
+            "xp": { "type": "number" },
+            "level": { "type": "number" },
+            "completedMissions": { "type": "number" },
+            "completedLabs": { "type": "number" }
+          }
+        },
+        "radarStats": {
+          "type": "object",
+          "properties": {
+            "technical": { "type": "number" },
+            "intelligence": { "type": "number" },
+            "security": { "type": "number" },
+            "tactical": { "type": "number" },
+            "leadership": { "type": "number" }
+          }
+        }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "UserSkill": {
+      "title": "User Skill",
+      "description": "A skill acquired by a user with a certificate",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "skillName": { "type": "string" },
+        "category": { "type": "string", "enum": ["HARD", "SOFT"] },
+        "certificateTitle": { "type": "string" },
+        "certificateUrl": { "type": "string" },
+        "attainedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "Roadmap": {
+      "title": "Learning Roadmap",
+      "description": "Specialized learning direction",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "category": { "type": "string" },
+        "difficulty": { "type": "string", "enum": ["BEGINNER", "INTERMEDIATE", "ADVANCED", "ELITE"] }
+      }
+    },
+    "ResearchWork": {
+      "title": "Research Work",
+      "description": "Scientific publication or thesis",
+      "type": "object",
+      "properties": {
+        "authorId": { "type": "string" },
+        "type": { "type": "string", "enum": ["THESIS", "ARTICLE", "WORK"] },
+        "title": { "type": "string" },
+        "status": { "type": "string", "enum": ["DRAFT", "REVIEW", "PUBLISHED"] }
+      }
+    },
+    "Skill": {
+      "title": "Skill",
+      "description": "Hard skill definition",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "category": { "type": "string" },
+        "level": { "type": "string" }
+      }
+    },
+    "Task": {
+      "title": "Task",
+      "description": "Mission task",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "category": { "type": "string" },
+        "xp": { "type": "number" },
+        "deadline": { "type": "string", "format": "date-time" }
+      }
+    },
+    "Submission": {
+      "title": "Submission",
+      "description": "Task submission",
+      "type": "object",
+      "properties": {
+        "taskId": { "type": "string" },
+        "userId": { "type": "string" },
+        "content": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "status": { "type": "string", "enum": ["PENDING", "ACCEPTED", "REJECTED"] }
+      }
+    },
+    "Verification": {
+      "title": "Verification",
+      "description": "Verification request",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "status": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "AuthLog": {
+      "title": "Auth Log",
+      "description": "Audit log",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "ip": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      }
+    },
+    "NewsItem": {
+      "title": "News Item",
+      "description": "Announcement",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "Team": {
+      "title": "Team",
+      "description": "Group of users",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "totalPoints": { "type": "number" },
+        "members": { "type": "array" }
+      }
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "User alert",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "message": { "type": "string" },
+        "read": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "Activity": {
+      "title": "Activity",
+      "description": "User log activity",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "type": { "type": "string" },
+        "description": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "firestore": {
+    "users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profiles"
+    },
+    "users/{userId}/skills/{skillId}": {
+      "schema": "UserSkill",
+      "description": "Skills and certificates for a user"
+    },
+    "users/{userId}/activities/{activityId}": {
+      "schema": "Activity",
+      "description": "User activity logs"
+    },
+    "roadmaps/{roadmapId}": {
+      "schema": "Roadmap",
+      "description": "Learning directions"
+    },
+    "research/{researchId}": {
+      "schema": "ResearchWork",
+      "description": "Scientific research database"
+    },
+    "skills_catalog/{skillId}": {
+      "schema": "Skill",
+      "description": "Catalog of available hard skills"
+    },
+    "tasks/{taskId}": {
+      "schema": "Task",
+      "description": "Academy missions and tasks"
+    },
+    "submissions/{submissionId}": {
+      "schema": "Submission",
+      "description": "User task submissions"
+    },
+    "verifications/{id}": {
+      "schema": "Verification",
+      "description": "User profile verification requests"
+    },
+    "auth_logs/{id}": {
+      "schema": "AuthLog",
+      "description": "Authentication audit logs"
+    },
+    "news/{id}": {
+      "schema": "NewsItem",
+      "description": "Academy news and announcements"
+    },
+    "teams/{id}": {
+      "schema": "Team",
+      "description": "Cadet tactical teams"
+    },
+    "notifications/{id}": {
+      "schema": "Notification",
+      "description": "User system notifications"
+    }
+  }
+}

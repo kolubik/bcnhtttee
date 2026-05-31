@@ -1,0 +1,101 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper Functions
+    function isSignedIn() { return request.auth != null; }
+    function isOwner(userId) { return isSignedIn() && request.auth.uid == userId; }
+    function isAdmin() { return isSignedIn() && exists(/databases/$(database)/documents/users/$(request.auth.uid)) && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'ADMIN'; }
+    function isValidId(id) { return id is string && id.size() <= 128; }
+    
+    // Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // User Profiles
+    match /users/{userId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isOwner(userId);
+      allow update: if isOwner(userId) || isAdmin();
+      allow delete: if isAdmin();
+
+      match /skills/{skillId} {
+        allow read: if isSignedIn();
+        allow write: if isOwner(userId) || isAdmin();
+      }
+
+      match /activities/{activityId} {
+        allow read: if isSignedIn();
+        allow create: if isOwner(userId) || isAdmin();
+        allow update, delete: if isAdmin();
+      }
+    }
+
+    // Roadmaps
+    match /roadmaps/{roadmapId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // Research
+    match /research/{researchId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn();
+      allow update: if isOwner(resource.data.authorId) || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // Skills Catalog
+    match /skills_catalog/{skillId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // Tasks
+    match /tasks/{taskId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // Submissions
+    match /submissions/{submissionId} {
+      allow read: if isSignedIn() && (isOwner(resource.data.userId) || isAdmin());
+      allow create: if isSignedIn() && isOwner(request.resource.data.userId);
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // Verifications
+    match /verifications/{id} {
+      allow read: if isAdmin();
+      allow create: if isSignedIn() && isOwner(request.resource.data.userId);
+      allow update: if isAdmin();
+    }
+
+    // Auth Logs
+    match /auth_logs/{id} {
+      allow read: if isAdmin();
+      allow create: if isSignedIn(); // System creates these or client on login
+    }
+
+    // News
+    match /news/{id} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // Teams
+    match /teams/{id} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn();
+      allow update: if isSignedIn(); // Simplified for now
+      allow delete: if isAdmin();
+    }
+
+    // Notifications
+    match /notifications/{id} {
+      allow read: if isSignedIn() && isOwner(resource.data.userId);
+      allow write: if isAdmin() || (isSignedIn() && isOwner(request.resource.data.userId));
+    }
+  }
+}

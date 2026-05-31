@@ -1,0 +1,6 @@
+{
+  "name": "UNIVERSAL",
+  "description": "Unified cyber-readiness platform featuring adaptive learning roadmaps, research publishing, scholarship programs, and operational missions.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
